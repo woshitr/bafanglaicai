@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八方来财</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: '华文行楷', cursive;
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #2b0a0a 0%, #0a0a0a 100%);
+        }
+
+        /* 主题文字 */
+        .main-text {
+            position: relative;
+            font-size: 8rem;
+            color: transparent;
+            -webkit-text-stroke: 2px #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .main-text::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #ffd700;
+            z-index: -1;
+            filter: blur(15px);
+        }
+
+        /* 粒子特效容器 */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* 金币粒子 */
+        .coin {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23FFD700" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>');
+            background-size: contain;
+            animation: coinFall 3s linear infinite;
+        }
+
+        /* 动画 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes coinFall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* 祥云装饰 */
+        .cloud {
+            position: absolute;
+            opacity: 0.2;
+            filter: drop-shadow(0 0 10px #ffd700);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-text {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="particles" id="particles"></div>
+        <h1 class="main-text" data-text="八方来财">八方来财</h1>
+    </div>
+
+    <script>
+        // 创建金币粒子
+        function createCoins() {
+            const particles = document.getElementById('particles');
+            const coinCount = 30;
+
+            for (let i = 0; i < coinCount; i++) {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.style.left = Math.random() * 100 + '%';
+                coin.style.animationDelay = Math.random() * 3 + 's';
+                particles.appendChild(coin);
+            }
+        }
+
+        // 创建祥云
+        function createClouds() {
+            const container = document.querySelector('.container');
+            const cloudSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFFFFF"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>`;
+
+            for (let i = 0; i < 8; i++) {
+                const cloud = document.createElement('img');
+                cloud.className = 'cloud';
+                cloud.src = cloudSvg;
+                cloud.style.width = Math.random() * 100 + 50 + 'px';
+                cloud.style.top = Math.random() * 100 + '%';
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.animation = `float ${3 + Math.random() * 3}s ease-in-out infinite`;
+                container.appendChild(cloud);
+            }
+        }
+
+        // 鼠标互动效果
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.getElementById('particles');
+            const spark = document.createElement('div');
+            spark.className = 'coin';
+            spark.style.left = e.clientX + 'px';
+            spark.style.top = e.clientY + 'px';
+            spark.style.animation = 'coinFall 1s linear';
+            particles.appendChild(spark);
+            
+            setTimeout(() => spark.remove(), 1000);
+        });
+
+        // 初始化
+        window.onload = () => {
+            createCoins();
+            createClouds();
+        };
+    </script>
+</body>
+</html>
